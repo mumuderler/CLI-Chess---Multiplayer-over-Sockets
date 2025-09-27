@@ -36,15 +36,66 @@ pip install -r requirements.txt
 
 On the host machine (player hosting the game):
 
-python server.py --port 5000
+python server.py --port 5000 [--ai] [--pairing-code] [--mode {standard|powerup|random_event}]
 
-Host waits for a connection and will be White by default.
+*   `--ai`: Play against a minimal AI opponent (offline).
+*   `--pairing-code`: Enable a pairing code for a more secure connection. The host will display a code that the client must enter.
+*   `--mode`: Select game mode. Options: `standard` (default), `powerup`, `random_event`.
+
+Host waits for a connection (unless `--ai` is used) and will be White by default.
 
 On the connecting machine (client):
 
-python client.py --host HOST_IP --port 5000
+python client.py --host HOST_IP --port 5000 [--pairing-code] [--mode {standard|powerup|random_event}]
+
+*   `--pairing-code`: If the host is using a pairing code, you must also use this flag and enter the code when prompted.
+*   `--mode`: Select game mode. Must match the host's selected mode.
 
 Play in the terminal. Commands are shown in the CLI (move input, resign, offer draw, save, export_image).
+
+### Game Modes
+
+**Standard Chess:** The classic game of chess.
+
+**Power-Up Chess:**
+Players can earn and activate special abilities to influence the game.
+*   **Earning Power-Ups:** Power-ups are earned randomly upon capturing an opponent's piece.
+*   **Activating Power-Ups:** Use the command `activate <index> [args]` where `<index>` is the number next to the power-up in your inventory, and `[args]` are any additional parameters required by the power-up (e.g., square names for Piece Swap or Teleport).
+*   **Available Power-Ups:**
+    *   **Extra Move:** Make two moves in a single turn.
+    *   **Piece Swap:** Swap the positions of two of your non-pawn pieces.
+    *   **Teleport:** Move a non-pawn piece to any empty square.
+    *   **Shield:** Protects a chosen piece from capture for one opponent's turn.
+    *   **Pawn Promotion:** Instantly promote one of your pawns to a Queen.
+
+**Random Event Chess:**
+The game is spiced up with unpredictable events that can change the board state. Events trigger randomly every few turns.
+*   **Possible Events:**
+    *   **Piece Transformation:** A random pawn transforms into a random non-pawn piece.
+    *   **Board Rotation:** The entire board rotates 180 degrees.
+    *   **Gravity:** All pieces "fall" to the lowest possible rank in their file.
+    *   **King Swap:** The positions of the two kings are swapped (reverted if it causes immediate check).
+
+
+How to build executables
+
+You can bundle the server and client into single executables for easier distribution. This requires PyInstaller.
+
+1.  Install PyInstaller:
+    ```bash
+    pip install pyinstaller
+    ```
+2.  Run the build script:
+    ```bash
+    python build_scripts/build.py
+    ```
+    This will create `server` and `client` executables (or `server.exe` and `client.exe` on Windows) in a new `dist/` directory.
+3.  Run the executables:
+    ```bash
+    ./dist/server --port 5000
+    ./dist/client --host HOST_IP --port 5000
+    ```
+    (Adjust commands for Windows, e.g., `.\dist\server.exe`)
 
 
 

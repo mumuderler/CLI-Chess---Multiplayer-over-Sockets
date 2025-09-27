@@ -24,8 +24,8 @@ def clear():
     else:
         os.system('clear')
 
-def render_board(board: chess.Board, orientation: chess.Color=chess.WHITE):
-# orientation True=white on bottom
+def render_board(board: chess.Board, orientation: chess.Color=chess.WHITE, powerups: list=None, event_message: str=None):
+    # orientation True=white on bottom
     ranks = range(8, 0, -1) if orientation == chess.WHITE else range(1, 9)
     files = range(0, 8) if orientation == chess.WHITE else range(7, -1, -1)
 
@@ -48,6 +48,15 @@ def render_board(board: chess.Board, orientation: chess.Color=chess.WHITE):
         out.append(''.join(row) + ' ' + str(r))
     out.append(' a b c d e f g h')
     print('\n'.join(out))
+
+    if powerups and len(powerups) > 0:
+        print("\n--- Available Power-Ups ---")
+        for i, powerup_name in enumerate(powerups):
+            print(f"{i}: {powerup_name}")
+        print("---------------------------\n")
+    
+    if event_message:
+        print(f"\n--- Event: {event_message} ---\n")
 
 
 def prompt_move(turn_color_name: str):
